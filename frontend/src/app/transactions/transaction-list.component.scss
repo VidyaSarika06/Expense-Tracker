@@ -1,0 +1,28 @@
+.app-shell { display: flex; min-height: 100vh; }
+.main-area  { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.page-content { flex: 1; padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+.page-header {
+  display: flex; align-items: center; justify-content: space-between;
+  h2 { font-size: 22px; font-weight: 700; }
+}
+
+.filter-bar { padding: 16px 20px; }
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  .form-group { margin-bottom: 0; }
+}
+.filter-actions { display: flex; gap: 8px; margin-top: 12px; }
+
+.actions { display: flex; gap: 8px; }
+.amount  { font-weight: 600; }
+.empty-row { text-align: center; color: var(--text-muted); padding: 32px !important; }
+.table-info { font-size: 12px; margin-top: 12px; text-align: right; }
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  @media (max-width: 480px) { grid-template-columns: 1fr; }
+}

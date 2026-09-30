@@ -1,0 +1,76 @@
+<div class="app-shell">
+  <app-sidebar [collapsed]="sidebarCollapsed"></app-sidebar>
+  <div class="main-area">
+    <app-header (toggleSidebar)="sidebarCollapsed = !sidebarCollapsed"></app-header>
+    <main class="page-content">
+
+      <div class="page-header">
+        <h2>Reports</h2>
+        <div class="month-picker">
+          <input type="month" [(ngModel)]="month" (change)="load()" />
+        </div>
+      </div>
+
+      <div *ngIf="loading" class="loading-state">Loading report...</div>
+
+      <ng-container *ngIf="!loading && summary">
+
+        <!-- Summary Cards -->
+        <div class="stats-grid">
+          <div class="stat-card success">
+            <div class="stat-icon">💰</div>
+            <div class="stat-body">
+              <span class="stat-label">Total Income</span>
+              <span class="stat-value">₹{{ summary.totalIncome | number:'1.0-0' }}</span>
+            </div>
+          </div>
+          <div class="stat-card danger">
+            <div class="stat-icon">💸</div>
+            <div class="stat-body">
+              <span class="stat-label">Total Expense</span>
+              <span class="stat-value">₹{{ summary.totalExpense | number:'1.0-0' }}</span>
+            </div>
+          </div>
+          <div class="stat-card primary">
+            <div class="stat-icon">⚖️</div>
+            <div class="stat-body">
+              <span class="stat-label">Balance</span>
+              <span class="stat-value">₹{{ summary.balance | number:'1.0-0' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category Breakdown -->
+        <div class="card">
+          <h3 class="card-title">Expense by Category</h3>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>Category</th><th>Amount</th></tr></thead>
+              <tbody>
+                <tr *ngFor="let c of summary.expenseByCategory">
+                  <td>{{ c.category }}</td>
+                  <td class="text-danger">₹{{ c.amount | number:'1.0-0' }}</td>
+                </tr>
+                <tr *ngIf="!summary.expenseByCategory.length">
+                  <td colspan="2" class="empty-row">No expense data</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Export Buttons -->
+        <div class="card export-card">
+          <h3 class="card-title">Export Report</h3>
+          <div class="export-actions">
+            <button class="btn btn-success" (click)="exportCSV()">⬇ Export CSV</button>
+           <!-- <button class="btn btn-primary" (click)="exportExcel()">⬇ Export Excel</button>
+            <button class="btn btn-danger"  (click)="exportPDF()">⬇ Export PDF</button>-->
+          </div>
+        </div>
+
+      </ng-container>
+    </main>
+    <app-footer></app-footer>
+  </div>
+</div>

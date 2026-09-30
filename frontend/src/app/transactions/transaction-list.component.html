@@ -1,0 +1,154 @@
+<div class="app-shell">
+  <app-sidebar [collapsed]="sidebarCollapsed"></app-sidebar>
+  <div class="main-area">
+    <app-header (toggleSidebar)="sidebarCollapsed = !sidebarCollapsed"></app-header>
+    <main class="page-content">
+
+      <div class="page-header">
+        <h2>Transactions</h2>
+        <button class="btn btn-primary" (click)="openCreate()">+ Add Transaction</button>
+      </div>
+
+      <!-- Filters -->
+      <div class="card filter-bar">
+        <div class="filter-grid">
+          <div class="form-group">
+            <label>Start Date</label>
+            <input type="date" [(ngModel)]="filter.startDate" />
+          </div>
+          <div class="form-group">
+            <label>End Date</label>
+            <input type="date" [(ngModel)]="filter.endDate" />
+          </div>
+          <div class="form-group">
+            <label>Category</label>
+            <select [(ngModel)]="filter.categoryId">
+              <option [ngValue]="undefined">All</option>
+              <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Type</label>
+            <select [(ngModel)]="filter.type">
+              <option value="">All</option>
+              <option value="INCOME">Income</option>
+              <option value="EXPENSE">Expense</option>
+            </select>
+          </div>
+        </div>
+        <div class="filter-actions">
+          <button class="btn btn-primary btn-sm" (click)="applyFilter()">Apply</button>
+          <button class="btn btn-outline btn-sm" (click)="clearFilter()">Clear</button>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="card">
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Note</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let t of page.content">
+                <td>{{ t.date }}</td>
+                <td>{{ t.categoryName }}</td>
+                <td>{{ t.note ?? '—' }}</td>
+                <td>
+                  <span class="badge" [ngClass]="t.type === 'INCOME' ? 'badge-income' : 'badge-expense'">
+                    {{ t.type }}
+                  </span>
+                </td>
+                <td [ngClass]="t.type === 'INCOME' ? 'text-success' : 'text-danger'" class="amount">
+                  ₹{{ t.amount | number:'1.0-0' }}
+                </td>
+                <td class="actions">
+                  <button class="btn btn-outline btn-sm" (click)="openEdit(t)">Edit</button>
+                  <button class="btn btn-danger btn-sm"  (click)="delete(t.id!)">Delete</button>
+                </td>
+              </tr>
+              <tr *ngIf="!page.content.length">
+                <td colspan="6" class="empty-row">No transactions found</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination" *ngIf="page.totalPages > 1">
+          <button (click)="goToPage(page.number - 1)" [disabled]="page.number === 0">‹</button>
+          <button *ngFor="let p of pages"
+                  [class.active]="p === page.number"
+                  (click)="goToPage(p)">{{ p + 1 }}</button>
+          <button (click)="goToPage(page.number + 1)" [disabled]="page.number >= page.totalPages - 1">›</button>
+        </div>
+
+        <p class="table-info text-muted">
+          Showing {{ page.content.length }} of {{ page.totalElements }} transactions
+        </p>
+      </div>
+
+    </main>
+    <app-footer></app-footer>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" *ngIf="showModal">
+  <div class="modal">
+    <h3>{{ editMode ? 'Edit Transaction' : 'New Transaction' }}</h3>
+    <div class="alert alert-danger" *ngIf="error">{{ error }}</div>
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Amount *</label>
+          <input type="number" formControlName="amount" placeholder="0.00" min="0.01" step="0.01" />
+          <span class="error-msg" *ngIf="form.get('amount')?.invalid && form.get('amount')?.touched">
+            Amount must be greater than 0
+          </span>
+        </div>
+        <div class="form-group">
+          <label>Type *</label>
+          <select formControlName="type">
+            <option value="INCOME">Income</option>
+            <option value="EXPENSE">Expense</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date *</label>
+          <input type="date" formControlName="date" [max]="today" />
+          <span class="error-msg" *ngIf="form.get('date')?.invalid && form.get('date')?.touched">
+            Date is required and cannot be future
+          </span>
+        </div>
+        <div class="form-group">
+          <label>Category *</label>
+          <select formControlName="categoryId">
+            <option [ngValue]="null" disabled>Select category</option>
+            <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
+          </select>
+          <span class="error-msg" *ngIf="form.get('categoryId')?.invalid && form.get('categoryId')?.touched">
+            Category is required
+          </span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Note</label>
+        <input type="text" formControlName="note" placeholder="Optional note" />
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" (click)="showModal = false">Cancel</button>
+        <button type="submit" class="btn btn-primary">{{ editMode ? 'Update' : 'Create' }}</button>
+      </div>
+    </form>
+  </div>
+</div>

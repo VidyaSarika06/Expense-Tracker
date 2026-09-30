@@ -1,0 +1,11 @@
+<header class="header">
+  <div class="header-left">
+    <button class="menu-btn" (click)="toggleSidebar.emit()">☰</button>
+    <span class="brand">💰 Expense Tracker</span>
+  </div>
+  <div class="header-right">
+    <span class="badge" [ngClass]="roleBadgeClass">{{ roleLabel }}</span>
+    <span class="email">{{ email }}</span>
+    <button class="btn btn-outline btn-sm" (click)="logout()">Logout</button>
+  </div>
+</header>

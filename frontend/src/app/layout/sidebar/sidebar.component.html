@@ -1,0 +1,40 @@
+<nav class="sidebar" [class.collapsed]="collapsed">
+
+  <div class="nav-section">
+    <span class="nav-label" *ngIf="!collapsed">Menu</span>
+
+    <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+      <span class="nav-icon">📊</span>
+      <span class="nav-text" *ngIf="!collapsed">Dashboard</span>
+    </a>
+
+    <a routerLink="/transactions" routerLinkActive="active" class="nav-item">
+      <span class="nav-icon">💳</span>
+      <span class="nav-text" *ngIf="!collapsed">Transactions</span>
+    </a>
+
+    <a routerLink="/categories" routerLinkActive="active" class="nav-item">
+      <span class="nav-icon">🏷️</span>
+      <span class="nav-text" *ngIf="!collapsed">Categories</span>
+    </a>
+
+    <!-- ROLE_INDIVIDUAL only -->
+    <ng-container *ngIf="isIndividual">
+      <a routerLink="/budgets" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">💼</span>
+        <span class="nav-text" *ngIf="!collapsed">Budgets</span>
+      </a>
+
+      <a routerLink="/reports" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">📈</span>
+        <span class="nav-text" *ngIf="!collapsed">Reports</span>
+      </a>
+
+      <a routerLink="/insights" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">💡</span>
+        <span class="nav-text" *ngIf="!collapsed">Insights</span>
+      </a>
+    </ng-container>
+  </div>
+
+</nav>

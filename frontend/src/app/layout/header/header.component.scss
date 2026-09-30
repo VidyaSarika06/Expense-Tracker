@@ -1,0 +1,48 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: var(--header-height);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  box-shadow: var(--shadow-sm);
+
+  &-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  &-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+}
+
+.menu-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--text-secondary);
+  padding: 4px 8px;
+  border-radius: 6px;
+  &:hover { background: var(--bg); }
+}
+
+.brand {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.email {
+  font-size: 13px;
+  color: var(--text-secondary);
+
+  @media (max-width: 480px) { display: none; }
+}
